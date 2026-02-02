@@ -166,14 +166,20 @@
   "version": {
     "major": 1,
     "minor": 0,
-    "patch": 9
+    "patch": 11
   },
   "exportHistory": [
     {
-      "version": "v1.0.8",
-      "date": "2026-02-02T08:16:33.609Z",
-      "blockFile": "block_games_v1.0.8.bat",
-      "unblockFile": "unblock_games_v1.0.8.bat"
+      "version": "v1.0.10",
+      "date": "2026-02-02T17:38:54.062Z",
+      "blockFile": "block_games_v1.0.10.bat",
+      "unblockFile": "unblock_games_v1.0.10.bat"
+    },
+    {
+      "version": "v1.0.9",
+      "date": "2026-02-02T17:38:06.674Z",
+      "blockFile": "block_games_v1.0.9.bat",
+      "unblockFile": "unblock_games_v1.0.9.bat"
     }
   ]
 }

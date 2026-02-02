@@ -1,6 +1,9 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useLanguage } from '../../context/LanguageContext'
 
 export function Pagination({ currentPage, totalPages, onPageChange }) {
+    const { t } = useLanguage()
+
     if (totalPages <= 1) return null
 
     return (
@@ -14,8 +17,8 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
             >
                 <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-slate-400 text-sm">
-                Page {currentPage} of {totalPages}
+            <span className="text-[var(--text-secondary)] text-sm">
+                {t('page')} {currentPage} {t('of')} {totalPages}
             </span>
             <button
                 onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
@@ -29,3 +32,4 @@ export function Pagination({ currentPage, totalPages, onPageChange }) {
         </div>
     )
 }
+

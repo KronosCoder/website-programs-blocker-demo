@@ -1,4 +1,5 @@
 import { useBlocklist } from './hooks/useBlocklist'
+import { useLanguage } from './context/LanguageContext'
 import { LoadingSpinner } from './components/common/LoadingSpinner'
 import { Header } from './components/layout/Header'
 import { Footer } from './components/layout/Footer'
@@ -9,6 +10,7 @@ import { ExportHistory } from './components/export/ExportHistory'
 import './index.css'
 
 function App() {
+  const { t } = useLanguage()
   const {
     blocklist,
     versions,
@@ -19,7 +21,7 @@ function App() {
     deleteProgram,
     exportBat,
     deleteHistory
-  } = useBlocklist()
+  } = useBlocklist(t)
 
   if (loading) {
     return <LoadingSpinner />

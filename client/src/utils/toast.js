@@ -77,7 +77,7 @@ export const showError = ({ title, text }) => {
 }
 
 // Question dialog for export
-export const showQuestion = async ({ title, html }) => {
+export const showQuestion = async ({ title, html, confirmText = 'Yes, export!', cancelText = 'Cancel' }) => {
     const result = await Swal.fire({
         title,
         html,
@@ -85,9 +85,10 @@ export const showQuestion = async ({ title, html }) => {
         showCancelButton: true,
         confirmButtonColor: '#22c55e',
         cancelButtonColor: '#64748b',
-        confirmButtonText: 'Yes, export!',
-        cancelButtonText: 'Cancel',
+        confirmButtonText: confirmText,
+        cancelButtonText: cancelText,
         ...darkTheme,
     })
     return result.isConfirmed
 }
+

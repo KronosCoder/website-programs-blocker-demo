@@ -11,7 +11,7 @@ import {
 } from '../utils/api'
 import { Toast, showLoading, closeLoading, confirmDialog, showSuccess, showError, showQuestion } from '../utils/toast'
 
-export function useBlocklist() {
+export function useBlocklist(t) {
     const [blocklist, setBlocklist] = useState({ websites: [], programs: [] })
     const [versions, setVersions] = useState({ currentVersion: 'v1.0.0', history: [] })
     const [loading, setLoading] = useState(true)
@@ -30,7 +30,7 @@ export function useBlocklist() {
             setBlocklist(blockData)
             setVersions(versionData)
         } catch (error) {
-            Toast.fire({ icon: 'error', title: 'Failed to fetch data' })
+            Toast.fire({ icon: 'error', title: t('failedToFetchData') })
         } finally {
             setLoading(false)
         }
@@ -39,7 +39,7 @@ export function useBlocklist() {
     // Add website with validation
     const addWebsite = async (url) => {
         if (!url.trim()) {
-            Toast.fire({ icon: 'warning', title: 'Please enter a URL' })
+            Toast.fire({ icon: 'warning', title: t('pleaseEnterUrl') })
             return false
         }
 
@@ -47,20 +47,20 @@ export function useBlocklist() {
         const urlPattern = /^[a-zA-Z0-9][a-zA-Z0-9-]{0,61}[a-zA-Z0-9]?(\.[a-zA-Z]{2,})+$/
         const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '')
         if (!urlPattern.test(cleanUrl)) {
-            Toast.fire({ icon: 'warning', title: 'Please enter a valid URL' })
+            Toast.fire({ icon: 'warning', title: t('pleaseEnterValidUrl') })
             return false
         }
 
         try {
-            showLoading('Adding website...')
+            showLoading(t('addingWebsite'))
             const website = await addWebsiteApi(url)
             setBlocklist(prev => ({ ...prev, websites: [...prev.websites, website] }))
             closeLoading()
-            Toast.fire({ icon: 'success', title: 'Website added successfully!' })
+            Toast.fire({ icon: 'success', title: t('websiteAddedSuccess') })
             return true
         } catch (error) {
             closeLoading()
-            Toast.fire({ icon: 'error', title: 'Failed to add website' })
+            Toast.fire({ icon: 'error', title: t('failedToAddWebsite') })
             return false
         }
     }
@@ -68,9 +68,10 @@ export function useBlocklist() {
     // Delete website with confirmation
     const deleteWebsite = async (id, url) => {
         const confirmed = await confirmDialog({
-            title: 'Delete Website?',
-            text: `Are you sure you want to remove "${url}"?`,
-            confirmText: 'Yes, delete it!'
+            title: t('deleteWebsiteTitle'),
+            text: `${t('deleteWebsiteText')} "${url}"?`,
+            confirmText: t('yesDeleteIt'),
+            cancelText: t('cancel')
         })
 
         if (confirmed) {
@@ -80,9 +81,9 @@ export function useBlocklist() {
                     ...prev,
                     websites: prev.websites.filter(w => w.id !== id)
                 }))
-                Toast.fire({ icon: 'success', title: 'Website removed!' })
+                Toast.fire({ icon: 'success', title: t('websiteRemoved') })
             } catch (error) {
-                Toast.fire({ icon: 'error', title: 'Failed to remove website' })
+                Toast.fire({ icon: 'error', title: t('failedToRemoveWebsite') })
             }
         }
     }
@@ -90,24 +91,24 @@ export function useBlocklist() {
     // Add program with validation
     const addProgram = async (program) => {
         if (!program.name.trim()) {
-            Toast.fire({ icon: 'warning', title: 'Please enter a program name' })
+            Toast.fire({ icon: 'warning', title: t('pleaseEnterProgramName') })
             return false
         }
         if (!program.path.trim()) {
-            Toast.fire({ icon: 'warning', title: 'Please enter the program path' })
+            Toast.fire({ icon: 'warning', title: t('pleaseEnterProgramPath') })
             return false
         }
 
         try {
-            showLoading('Adding program...')
+            showLoading(t('addingProgram'))
             const newProgram = await addProgramApi(program)
             setBlocklist(prev => ({ ...prev, programs: [...prev.programs, newProgram] }))
             closeLoading()
-            Toast.fire({ icon: 'success', title: 'Program added successfully!' })
+            Toast.fire({ icon: 'success', title: t('programAddedSuccess') })
             return true
         } catch (error) {
             closeLoading()
-            Toast.fire({ icon: 'error', title: 'Failed to add program' })
+            Toast.fire({ icon: 'error', title: t('failedToAddProgram') })
             return false
         }
     }
@@ -115,9 +116,10 @@ export function useBlocklist() {
     // Delete program with confirmation
     const deleteProgram = async (id, name) => {
         const confirmed = await confirmDialog({
-            title: 'Delete Program?',
-            text: `Are you sure you want to remove "${name}"?`,
-            confirmText: 'Yes, delete it!'
+            title: t('deleteProgramTitle'),
+            text: `${t('deleteWebsiteText')} "${name}"?`,
+            confirmText: t('yesDeleteIt'),
+            cancelText: t('cancel')
         })
 
         if (confirmed) {
@@ -127,9 +129,9 @@ export function useBlocklist() {
                     ...prev,
                     programs: prev.programs.filter(p => p.id !== id)
                 }))
-                Toast.fire({ icon: 'success', title: 'Program removed!' })
+                Toast.fire({ icon: 'success', title: t('programRemoved') })
             } catch (error) {
-                Toast.fire({ icon: 'error', title: 'Failed to remove program' })
+                Toast.fire({ icon: 'error', title: t('failedToRemoveProgram') })
             }
         }
     }
@@ -137,25 +139,27 @@ export function useBlocklist() {
     // Export BAT files
     const exportBat = async () => {
         const confirmed = await showQuestion({
-            title: 'Export BAT Files?',
+            title: t('exportBatTitle'),
             html: `
-        <p style="color: #94a3b8;">This will generate new BAT files with version <strong style="color: #3b82f6;">${versions.currentVersion}</strong></p>
-        <p style="color: #64748b; font-size: 0.875rem; margin-top: 0.5rem;">Files will be saved in server/exports folder</p>
-      `
+        <p style="color: #94a3b8;">${t('exportBatText')} <strong style="color: #3b82f6;">${versions.currentVersion}</strong></p>
+        <p style="color: #64748b; font-size: 0.875rem; margin-top: 0.5rem;">${t('exportBatNote')}</p>
+      `,
+            confirmText: t('yesExport'),
+            cancelText: t('cancel')
         })
 
         if (confirmed) {
             try {
-                showLoading('Exporting...', '<p style="color: #94a3b8;">Generating BAT files...</p>')
+                showLoading(t('exporting'), `<p style="color: #94a3b8;">${t('generatingBat')}</p>`)
                 const data = await exportBatApi()
                 await fetchData() // Refresh to get new version
 
                 showSuccess({
-                    title: 'Export Successful!',
+                    title: t('exportSuccess'),
                     html: `
             <div style="text-align: left; color: #94a3b8;">
-              <p><strong style="color: #22c55e;">Version:</strong> ${data.version}</p>
-              <p style="margin-top: 0.5rem;"><strong style="color: #3b82f6;">Files created:</strong></p>
+              <p><strong style="color: #22c55e;">${t('version')}:</strong> ${data.version}</p>
+              <p style="margin-top: 0.5rem;"><strong style="color: #3b82f6;">${t('filesCreated')}:</strong></p>
               <ul style="margin-left: 1rem; margin-top: 0.25rem;">
                 <li>📄 ${data.files.block}</li>
                 <li>📄 ${data.files.unblock}</li>
@@ -165,8 +169,8 @@ export function useBlocklist() {
                 })
             } catch (error) {
                 showError({
-                    title: 'Export Failed!',
-                    text: 'Failed to export BAT files. Please try again.'
+                    title: t('exportFailed'),
+                    text: t('exportFailedText')
                 })
             }
         }
@@ -175,9 +179,10 @@ export function useBlocklist() {
     // Delete history with confirmation
     const deleteHistory = async (version, onPageReset) => {
         const confirmed = await confirmDialog({
-            title: 'Delete Export?',
-            text: `Are you sure you want to delete "${version}" and its BAT files?`,
-            confirmText: 'Yes, delete!'
+            title: t('deleteExportTitle'),
+            text: `${t('deleteExportText')} "${version}" ${t('andItsBatFiles')}`,
+            confirmText: t('yesDelete'),
+            cancelText: t('cancel')
         })
 
         if (confirmed) {
@@ -188,9 +193,9 @@ export function useBlocklist() {
                     history: prev.history.filter(h => h.version !== version)
                 }))
                 if (onPageReset) onPageReset()
-                Toast.fire({ icon: 'success', title: `Deleted ${version}!` })
+                Toast.fire({ icon: 'success', title: `${t('deleted')} ${version}!` })
             } catch (error) {
-                Toast.fire({ icon: 'error', title: 'Failed to delete history' })
+                Toast.fire({ icon: 'error', title: t('failedToDeleteHistory') })
             }
         }
     }
@@ -207,3 +212,4 @@ export function useBlocklist() {
         deleteHistory
     }
 }
+
