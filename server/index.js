@@ -32,3 +32,5 @@ app.use('/api', exportRoutes);
 app.listen(PORT, () => {
   console.log(`🚀 Game Blocker API running at http://localhost:${PORT}`);
 });
+
+module.exports = app
