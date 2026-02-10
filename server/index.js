@@ -21,6 +21,12 @@ app.use('/api/websites', websiteRoutes);
 app.use('/api/programs', programRoutes);
 app.use('/api', exportRoutes);
 
+// Global Error Handler
+app.use((err, req, res, next) => {
+  console.error('[SERVER ERROR]', err);
+  res.status(500).json({ error: 'Internal Server Error', details: err.message });
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Game Blocker API running at http://localhost:${PORT}`);

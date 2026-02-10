@@ -1,6 +1,5 @@
 // API Base URL
-export const API_BASE = 'https://e-blocker-api.vercel.app/api'
-// export const API_BASE = '/api'
+export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
 
 // Fetch blocklist data
 export const fetchBlocklist = async () => {
