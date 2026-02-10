@@ -9,12 +9,11 @@ function generateBlockBat(data, version) {
     let bat = `@echo off
 :: ===================================
 :: Game Blocker Script ${version}
-:: Block gaming websites and programs
 :: Methods: Hosts, Firewall, Registry (IFEO)
 :: Auto-elevates to Administrator!
 :: ===================================
 
-:: ===================================  
+:: ===================================
 :: AUTO-ELEVATE TO ADMINISTRATOR
 :: ===================================
 net session >nul 2>&1
@@ -46,7 +45,7 @@ set HOSTS=%SystemRoot%\\System32\\drivers\\etc\\hosts
 :: Backup hosts file
 copy "%HOSTS%" "%HOSTS%.backup" >nul 2>&1
 
-:: Add gaming websites to hosts file
+:: Add newline to ensure we don't break existing lines
 echo. >> "%HOSTS%"
 echo # ====== GAME BLOCKER ${version} - START ====== >> "%HOSTS%"
 
@@ -84,13 +83,11 @@ echo.
 :: 3. BLOCK PROGRAMS (REGISTRY HIJACK)
 :: ===================================
 echo [STEP 3] Blocking Executables (Registry Level)...
-echo [INFO] This prevents the game from starting regardless of location.
 
 `;
 
-    // IFEO Registry Block (The most powerful method)
+    // IFEO Registry Block
     processNames.forEach(proc => {
-        bat += `:: Block ${proc}\r\n`;
         bat += `reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\${proc}" /v Debugger /t REG_SZ /d "rundll32.exe" /f >nul 2>&1\r\n`;
     });
 
@@ -110,12 +107,19 @@ echo [STEP 4] Applying Firewall Rules & Killing Processes...
         bat += `taskkill /F /IM ${proc} >nul 2>&1\r\n`;
     });
 
-    // Firewall (Keep as backup)
+    // Firewall
     programs.forEach(p => {
-        // Remove old rule first to prevent duplicates
+        // Remove old rule first
         bat += `netsh advfirewall firewall delete rule name="Block ${p.name}" >nul 2>&1\r\n`;
 
+        // FIX: ถ้า path เป็น * ให้ข้าม Firewall (เพราะบล็อกที่ Registry แล้ว)
+        if (p.path === '*' || p.path === '') {
+            bat += `:: Skipping firewall for ${p.name} (Handled by Registry Block)\r\n`;
+            return;
+        }
+
         if (p.path.includes('*')) {
+            // Handle wildcard folder paths (e.g. C:\Games\*)
             const basePath = p.path.split('*')[0];
             bat += `if exist "${basePath}" (\r\n`;
             bat += `    for /d %%i in ("${basePath}*") do (\r\n`;
@@ -125,6 +129,7 @@ echo [STEP 4] Applying Firewall Rules & Killing Processes...
             bat += `    )\r\n`;
             bat += `)\r\n`;
         } else {
+            // Handle exact paths
             bat += `if exist "${p.path}" (\r\n`;
             bat += `    netsh advfirewall firewall add rule name="Block ${p.name}" dir=out action=block program="${p.path}" >nul 2>&1\r\n`;
             bat += `)\r\n`;
@@ -145,11 +150,6 @@ echo ========================================
 echo      GAME BLOCKING COMPLETED!
 echo ========================================
 echo.
-echo 1. Hosts file updated.
-echo 2. Browser DoH disabled.
-echo 3. Game EXEs blocked in Registry.
-echo 4. Firewall rules active.
-echo.
 echo IMPORTANT: Please restart your browsers.
 timeout /t 5 /nobreak >nul
 exit
@@ -163,7 +163,6 @@ function generateUnblockBat(data, version) {
     const websites = data.websites;
     const programs = data.programs;
 
-    // We need process names for unblocking registry keys too
     const processNames = [...new Set(programs.map(p => p.processName))];
 
     // Get all URLs
@@ -206,7 +205,7 @@ echo [STEP 1] Unblocking websites...
 set HOSTS=%SystemRoot%\\System32\\drivers\\etc\\hosts
 set TEMP_HOSTS=%TEMP%\\hosts_temp
 
-:: Clean up Hosts file logic
+:: Working with temp file
 copy "%HOSTS%" "%TEMP_HOSTS%" >nul 2>&1
 
 :: Remove header/footer comments
@@ -247,7 +246,6 @@ echo [STEP 3] Unblocking Executables (Registry)...
 
 `;
 
-    // Remove IFEO Registry Block
     processNames.forEach(proc => {
         bat += `reg delete "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\${proc}" /f >nul 2>&1\r\n`;
     });
