@@ -8,7 +8,10 @@ export function ProgramItem({ program, index, onDelete }) {
         >
             <div className="min-w-0 flex-1">
                 <div className="font-medium text-slate-200">{program.name}</div>
-                <div className="text-xs text-slate-500 truncate">{program.path}</div>
+                <div className="text-xs text-purple-400/70 truncate">{program.processName}</div>
+                {program.path && (
+                    <div className="text-xs text-slate-500/60 truncate">{program.path}</div>
+                )}
             </div>
             <button
                 onClick={() => onDelete(program.id, program.name)}

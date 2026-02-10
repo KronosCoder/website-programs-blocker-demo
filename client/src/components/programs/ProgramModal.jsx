@@ -1,9 +1,10 @@
 import { useState, useRef } from 'react'
-import { Monitor, Plus, FolderOpen, X } from 'lucide-react'
+import { Monitor, Plus, FolderOpen, X, ChevronDown, ChevronUp, Shield } from 'lucide-react'
 import { useLanguage } from '../../context/LanguageContext'
 
 export function ProgramModal({ isOpen, onClose, onAdd }) {
     const [program, setProgram] = useState({ name: '', path: '', processName: '' })
+    const [showAdvanced, setShowAdvanced] = useState(false)
     const fileInputRef = useRef(null)
     const { t } = useLanguage()
 
@@ -27,12 +28,14 @@ export function ProgramModal({ isOpen, onClose, onAdd }) {
         const success = await onAdd(program)
         if (success) {
             setProgram({ name: '', path: '', processName: '' })
+            setShowAdvanced(false)
             onClose()
         }
     }
 
     const handleClose = () => {
         setProgram({ name: '', path: '', processName: '' })
+        setShowAdvanced(false)
         onClose()
     }
 
@@ -55,9 +58,15 @@ export function ProgramModal({ isOpen, onClose, onAdd }) {
                 </button>
 
                 {/* Modal Header */}
-                <div className="flex items-center gap-3 mb-6">
+                <div className="flex items-center gap-3 mb-4">
                     <Monitor className="w-8 h-8 text-purple-400" />
                     <h2 className="text-2xl font-bold text-white">{t('addProgramTitle')}</h2>
+                </div>
+
+                {/* Info Banner */}
+                <div className="flex items-start gap-2 px-3 py-2.5 rounded-lg bg-purple-500/10 border border-purple-500/20 mb-5">
+                    <Shield className="w-4 h-4 text-purple-400 mt-0.5 flex-shrink-0" />
+                    <p className="text-xs text-purple-300/80">{t('blockingInfo')}</p>
                 </div>
 
                 {/* Form */}
@@ -97,24 +106,9 @@ export function ProgramModal({ isOpen, onClose, onAdd }) {
                         />
                     </div>
 
-                    {/* Full Path */}
+                    {/* Process Name (Primary - Required) */}
                     <div>
-                        <label className="block text-sm text-slate-400 mb-2">{t('fullPath')} *</label>
-                        <input
-                            type="text"
-                            value={program.path}
-                            onChange={(e) => setProgram(p => ({ ...p, path: e.target.value }))}
-                            placeholder={t('fullPathPlaceholder')}
-                            className="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-white placeholder-slate-500"
-                        />
-                        <p className="text-xs text-slate-500 mt-1">
-                            {t('pathTip')}
-                        </p>
-                    </div>
-
-                    {/* Process Name */}
-                    <div>
-                        <label className="block text-sm text-slate-400 mb-2">{t('processName')}</label>
+                        <label className="block text-sm text-slate-400 mb-2">{t('processName')} *</label>
                         <input
                             type="text"
                             value={program.processName}
@@ -122,6 +116,36 @@ export function ProgramModal({ isOpen, onClose, onAdd }) {
                             placeholder={t('processNamePlaceholder')}
                             className="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-white placeholder-slate-500"
                         />
+                        <p className="text-xs text-slate-500 mt-1">
+                            {t('processNameTip')}
+                        </p>
+                    </div>
+
+                    {/* Advanced: Full Path (Optional) */}
+                    <div>
+                        <button
+                            type="button"
+                            onClick={() => setShowAdvanced(!showAdvanced)}
+                            className="flex items-center gap-2 text-sm text-slate-400 hover:text-purple-300 transition-colors cursor-pointer"
+                        >
+                            {showAdvanced ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                            {t('advancedOptions')}
+                        </button>
+                        {showAdvanced && (
+                            <div className="mt-3 animate-fade-in">
+                                <label className="block text-sm text-slate-400 mb-2">{t('fullPath')}</label>
+                                <input
+                                    type="text"
+                                    value={program.path}
+                                    onChange={(e) => setProgram(p => ({ ...p, path: e.target.value }))}
+                                    placeholder={t('fullPathPlaceholder')}
+                                    className="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/30 text-white placeholder-slate-500"
+                                />
+                                <p className="text-xs text-slate-500 mt-1">
+                                    {t('pathTip')}
+                                </p>
+                            </div>
+                        )}
                     </div>
 
                     {/* Buttons */}
@@ -145,5 +169,3 @@ export function ProgramModal({ isOpen, onClose, onAdd }) {
         </div>
     )
 }
-
-

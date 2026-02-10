@@ -1,13 +1,26 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { LanguageProvider } from './context/LanguageContext'
-import './index.css'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
+import Fallback from './fallback/fallback.jsx'
+import './index.css'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <App />,
+  },
+  {
+    path: '*',
+    element: <Fallback />,
+  },
+])
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <LanguageProvider>
-      <App />
+      <RouterProvider router={router} />
     </LanguageProvider>
   </StrictMode>,
 )

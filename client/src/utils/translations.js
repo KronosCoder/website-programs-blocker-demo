@@ -1,7 +1,7 @@
 export const translations = {
     en: {
         // Header
-        appTitle: 'Game Blocker Manager',
+        appTitle: 'Blocker Manager',
         appSubtitle: 'Manage blocked websites & programs • By KronosCoder',
         currentVersion: 'Current Version',
 
@@ -23,11 +23,14 @@ export const translations = {
         browserNote: "Note: Due to browser security, you'll need to enter the full path manually below",
         programName: 'Program Name',
         programNamePlaceholder: 'e.g., Steam, Epic Games, Roblox',
-        fullPath: 'Full Path',
+        fullPath: 'Full Path (optional — for firewall rules)',
         fullPathPlaceholder: 'e.g., C:\\Program Files\\Steam\\steam.exe',
-        pathTip: 'Tip: Use %LOCALAPPDATA% or %ProgramFiles% for system paths',
-        processName: 'Process Name (auto-detected)',
-        processNamePlaceholder: 'e.g., steam.exe (auto-detected from file)',
+        pathTip: 'Optional: Used for firewall rules only. Use %LOCALAPPDATA% or %ProgramFiles% for system paths',
+        processName: 'Process Name',
+        processNamePlaceholder: 'e.g., steam.exe',
+        processNameTip: 'The .exe filename that Windows runs — this is all that\'s needed to block the program',
+        blockingInfo: 'Programs are blocked at the Windows Registry level (IFEO). Only the exe filename is needed — no full path required.',
+        advancedOptions: 'Advanced Options (Firewall Path)',
         cancel: 'Cancel',
 
         // Export Section
@@ -68,7 +71,7 @@ export const translations = {
         websiteRemoved: 'Website removed!',
         failedToRemoveWebsite: 'Failed to remove website',
         pleaseEnterProgramName: 'Please enter a program name',
-        pleaseEnterProgramPath: 'Please enter the program path',
+        pleaseEnterProcessName: 'Please enter the process name (e.g., steam.exe)',
         addingProgram: 'Adding program...',
         programAddedSuccess: 'Program added successfully!',
         failedToAddProgram: 'Failed to add program',
@@ -94,7 +97,7 @@ export const translations = {
         failedToDeleteHistory: 'Failed to delete history',
         websiteAlreadyExists: 'This website already exists!',
         programNameExists: 'A program with this name already exists!',
-        programPathExists: 'A program with this path already exists!',
+        programProcessExists: 'A program with this process name already exists!',
     },
     th: {
         // Header
@@ -120,11 +123,14 @@ export const translations = {
         browserNote: 'หมายเหตุ: เนื่องจากข้อจำกัดของเบราว์เซอร์ คุณต้องใส่พาธเต็มด้านล่างด้วยตนเอง',
         programName: 'ชื่อโปรแกรม',
         programNamePlaceholder: 'เช่น Steam, Epic Games, Roblox',
-        fullPath: 'พาธเต็ม',
+        fullPath: 'พาธเต็ม (ไม่บังคับ — สำหรับ Firewall)',
         fullPathPlaceholder: 'เช่น C:\\Program Files\\Steam\\steam.exe',
-        pathTip: 'เคล็ดลับ: ใช้ %LOCALAPPDATA% หรือ %ProgramFiles% สำหรับพาธระบบ',
-        processName: 'ชื่อ Process (ตรวจจับอัตโนมัติ)',
-        processNamePlaceholder: 'เช่น steam.exe (ตรวจจับจากไฟล์อัตโนมัติ)',
+        pathTip: 'ไม่บังคับ: ใช้สำหรับ Firewall เท่านั้น ใช้ %LOCALAPPDATA% หรือ %ProgramFiles% สำหรับพาธระบบ',
+        processName: 'ชื่อ Process',
+        processNamePlaceholder: 'เช่น steam.exe',
+        processNameTip: 'ชื่อไฟล์ .exe ที่ Windows รัน — แค่นี้ก็เพียงพอที่จะบล็อกโปรแกรม',
+        blockingInfo: 'โปรแกรมถูกบล็อกในระดับ Windows Registry (IFEO) ต้องการแค่ชื่อไฟล์ exe — ไม่จำเป็นต้องใส่พาธเต็ม',
+        advancedOptions: 'ตัวเลือกขั้นสูง (พาธสำหรับ Firewall)',
         cancel: 'ยกเลิก',
 
         // Export Section
@@ -165,7 +171,7 @@ export const translations = {
         websiteRemoved: 'ลบเว็บไซต์แล้ว!',
         failedToRemoveWebsite: 'ไม่สามารถลบเว็บไซต์ได้',
         pleaseEnterProgramName: 'กรุณาป้อนชื่อโปรแกรม',
-        pleaseEnterProgramPath: 'กรุณาป้อนพาธของโปรแกรม',
+        pleaseEnterProcessName: 'กรุณาป้อนชื่อ Process (เช่น steam.exe)',
         addingProgram: 'กำลังเพิ่มโปรแกรม...',
         programAddedSuccess: 'เพิ่มโปรแกรมสำเร็จ!',
         failedToAddProgram: 'ไม่สามารถเพิ่มโปรแกรมได้',
@@ -191,7 +197,7 @@ export const translations = {
         failedToDeleteHistory: 'ไม่สามารถลบประวัติได้',
         websiteAlreadyExists: 'เว็บไซต์นี้มีอยู่แล้ว!',
         programNameExists: 'มีโปรแกรมชื่อนี้อยู่แล้ว!',
-        programPathExists: 'มีโปรแกรมที่พาธนี้อยู่แล้ว!',
+        programProcessExists: 'มี Process ชื่อนี้อยู่แล้ว!',
     }
 }
 

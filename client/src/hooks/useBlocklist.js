@@ -101,20 +101,20 @@ export function useBlocklist(t) {
             Toast.fire({ icon: 'warning', title: t('pleaseEnterProgramName') })
             return false
         }
-        if (!program.path.trim()) {
-            Toast.fire({ icon: 'warning', title: t('pleaseEnterProgramPath') })
+        if (!program.processName.trim()) {
+            Toast.fire({ icon: 'warning', title: t('pleaseEnterProcessName') })
             return false
         }
 
-        // Check if program already exists (by name or path)
+        // Check if program already exists (by name or processName)
         const existsByName = blocklist.programs.some(p => p.name.toLowerCase() === program.name.trim().toLowerCase())
-        const existsByPath = blocklist.programs.some(p => p.path.toLowerCase() === program.path.trim().toLowerCase())
+        const existsByProcess = blocklist.programs.some(p => p.processName.toLowerCase() === program.processName.trim().toLowerCase())
         if (existsByName) {
             Toast.fire({ icon: 'warning', title: t('programNameExists') })
             return false
         }
-        if (existsByPath) {
-            Toast.fire({ icon: 'warning', title: t('programPathExists') })
+        if (existsByProcess) {
+            Toast.fire({ icon: 'warning', title: t('programProcessExists') })
             return false
         }
 
