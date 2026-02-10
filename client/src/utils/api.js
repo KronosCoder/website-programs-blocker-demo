@@ -1,6 +1,6 @@
 // API Base URL
-export const API_BASE = 'https://e-blocker-api.vercel.app/api'
-// export const API_BASE = '/api'
+// export const API_BASE = 'https://e-blocker-api.vercel.app/api'
+export const API_BASE = '/api'
 
 // Fetch blocklist data
 export const fetchBlocklist = async () => {
