@@ -1,15 +1,10 @@
 // API Base URL
-export const API_BASE = 'https://e-blocker-api.vercel.app/api'
+// export const API_BASE = 'https://e-blocker-api.vercel.app/api'
+export const API_BASE = '/api'
 
 // Fetch blocklist data
 export const fetchBlocklist = async () => {
     const res = await fetch(`${API_BASE}/blocklist`)
-    return res.json()
-}
-
-// Fetch versions data
-export const fetchVersions = async () => {
-    const res = await fetch(`${API_BASE}/versions`)
     return res.json()
 }
 
@@ -41,15 +36,4 @@ export const addProgramApi = async (program) => {
 // Delete program
 export const deleteProgramApi = async (id) => {
     await fetch(`${API_BASE}/programs/${id}`, { method: 'DELETE' })
-}
-
-// Export BAT files
-export const exportBatApi = async () => {
-    const res = await fetch(`${API_BASE}/export`, { method: 'POST' })
-    return res.json()
-}
-
-// Delete history
-export const deleteHistoryApi = async (version) => {
-    await fetch(`${API_BASE}/history/${version}`, { method: 'DELETE' })
 }

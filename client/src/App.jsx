@@ -6,21 +6,18 @@ import { Footer } from './components/layout/Footer'
 import { WebsitesSection } from './components/websites/WebsitesSection'
 import { ProgramsSection } from './components/programs/ProgramsSection'
 import { ExportSection } from './components/export/ExportSection'
-import { ExportHistory } from './components/export/ExportHistory'
 import './index.css'
 
 function App() {
   const { t } = useLanguage()
   const {
     blocklist,
-    versions,
     loading,
     addWebsite,
     deleteWebsite,
     addProgram,
     deleteProgram,
-    exportBat,
-    deleteHistory
+    exportBat
   } = useBlocklist(t)
 
   if (loading) {
@@ -58,12 +55,6 @@ function App() {
 
           {/* Export Section */}
           <ExportSection onExport={exportBat} />
-
-          {/* Export History */}
-          <ExportHistory
-            history={versions.history}
-            onDelete={deleteHistory}
-          />
 
           {/* Footer */}
           <Footer />

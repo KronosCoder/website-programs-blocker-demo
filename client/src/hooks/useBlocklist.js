@@ -1,19 +1,16 @@
 import { useState, useEffect } from 'react'
 import {
     fetchBlocklist,
-    fetchVersions,
     addWebsiteApi,
     deleteWebsiteApi,
     addProgramApi,
     deleteProgramApi,
-    exportBatApi,
-    deleteHistoryApi
+    API_BASE
 } from '../utils/api'
-import { Toast, showLoading, closeLoading, confirmDialog, showSuccess, showError, showQuestion } from '../utils/toast'
+import { Toast, showLoading, closeLoading, confirmDialog, showQuestion } from '../utils/toast'
 
 export function useBlocklist(t) {
     const [blocklist, setBlocklist] = useState({ websites: [], programs: [] })
-    const [versions, setVersions] = useState({ currentVersion: 'v1.0.0', history: [] })
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -22,12 +19,8 @@ export function useBlocklist(t) {
 
     const fetchData = async () => {
         try {
-            const [blockData, versionData] = await Promise.all([
-                fetchBlocklist(),
-                fetchVersions()
-            ])
+            const blockData = await fetchBlocklist()
             setBlocklist(blockData)
-            setVersions(versionData)
         } catch (error) {
             Toast.fire({ icon: 'error', title: t('failedToFetchData') })
         } finally {
@@ -155,12 +148,12 @@ export function useBlocklist(t) {
         }
     }
 
-    // export bat file
+    // Export bat files and download directly
     const exportBat = async () => {
         const confirmed = await showQuestion({
             title: t('exportBatTitle'),
             html: `
-        <p style="color: #94a3b8;">${t('exportBatText')} <strong style="color: #3b82f6;">${versions.currentVersion}</strong></p>
+        <p style="color: #94a3b8;">${t('exportBatText')}</p>
         <p style="color: #64748b; font-size: 0.875rem; margin-top: 0.5rem;">${t('exportBatNote')}</p>
       `,
             confirmText: t('yesExport'),
@@ -170,65 +163,28 @@ export function useBlocklist(t) {
         if (confirmed) {
             try {
                 showLoading(t('exporting'), `<p style="color: #94a3b8;">${t('generatingBat')}</p>`)
-                const data = await exportBatApi()
-                await fetchData() // Refresh to get new version
 
-                showSuccess({
-                    title: t('exportSuccess'),
-                    html: `
-            <div style="text-align: left; color: #94a3b8;">
-              <p><strong style="color: #22c55e;">${t('version')}:</strong> ${data.version}</p>
-              <p style="margin-top: 0.5rem;"><strong style="color: #3b82f6;">${t('filesCreated')}:</strong></p>
-              <ul style="margin-left: 1rem; margin-top: 0.25rem;">
-                <li>📄 ${data.files.block}</li>
-                <li>📄 ${data.files.unblock}</li>
-              </ul>
-            </div>
-          `
-                })
+                // Direct download via browser
+                const link = document.createElement('a')
+                link.href = `${API_BASE}/export-download`
+                link.click()
+
+                closeLoading()
+                Toast.fire({ icon: 'success', title: t('exportSuccess') })
             } catch (error) {
-                showError({
-                    title: t('exportFailed'),
-                    text: t('exportFailedText')
-                })
-            }
-        }
-    }
-
-    // Delete history with confirmation
-    const deleteHistory = async (version, onPageReset) => {
-        const confirmed = await confirmDialog({
-            title: t('deleteExportTitle'),
-            text: `${t('deleteExportText')} "${version}" ${t('andItsBat Files')}`,
-            confirmText: t('yesDelete'),
-            cancelText: t('cancel')
-        })
-
-        if (confirmed) {
-            try {
-                await deleteHistoryApi(version)
-                setVersions(prev => ({
-                    ...prev,
-                    history: prev.history.filter(h => h.version !== version)
-                }))
-                if (onPageReset) onPageReset()
-                Toast.fire({ icon: 'success', title: `${t('deleted')} ${version}!` })
-            } catch (error) {
-                Toast.fire({ icon: 'error', title: t('failedToDeleteHistory') })
+                closeLoading()
+                Toast.fire({ icon: 'error', title: t('exportFailed') })
             }
         }
     }
 
     return {
         blocklist,
-        versions,
         loading,
         addWebsite,
         deleteWebsite,
         addProgram,
         deleteProgram,
-        exportBat,
-        deleteHistory
+        exportBat
     }
 }
-
