@@ -1,7 +1,6 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
-const path = require('path');
 
 // Import routes
 const blocklistRoutes = require('./routes/blocklistRoutes');
@@ -15,12 +14,6 @@ const PORT = 3001;
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Ensure exports directory exists
-const EXPORTS_DIR = path.join(__dirname, 'exports');
-if (!fs.existsSync(EXPORTS_DIR)) {
-  fs.mkdirSync(EXPORTS_DIR, { recursive: true });
-}
 
 // ===== API ROUTES =====
 app.use('/api/blocklist', blocklistRoutes);

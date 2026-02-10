@@ -1,12 +1,13 @@
 const archiver = require('archiver');
-const { readData, writeData } = require('../models/dataModel');
+const { getBlocklist, getVersion, incrementVersion } = require('../models/dataModel');
 const { generateBlockBat, generateUnblockBat } = require('../utils/batGenerator');
 
 // Export BAT files and download as zip directly (fully in-memory, no disk writes)
-exports.exportAndDownload = (req, res) => {
+exports.exportAndDownload = async (req, res) => {
     try {
-        const data = readData();
-        const version = `v${data.version.major}.${data.version.minor}.${data.version.patch}`;
+        const data = await getBlocklist();
+        const versionObj = data.version;
+        const version = `v${versionObj.major}.${versionObj.minor}.${versionObj.patch}`;
 
         // Generate BAT files content
         const blockBat = generateBlockBat(data, version);
@@ -16,20 +17,11 @@ exports.exportAndDownload = (req, res) => {
         const blockFileName = `block_games_${version}.bat`;
         const unblockFileName = `unblock_games_${version}.bat`;
 
-        // Update version (wrapped in try-catch for read-only filesystems like Vercel)
+        // Update version in database
         try {
-            data.version.patch++;
-            if (data.version.patch >= 10) {
-                data.version.patch = 0;
-                data.version.minor++;
-                if (data.version.minor >= 10) {
-                    data.version.minor = 0;
-                    data.version.major++;
-                }
-            }
-            writeData(data);
+            await incrementVersion();
         } catch (versionErr) {
-            console.warn('[WARN] Could not persist version update (read-only FS?):', versionErr.message);
+            console.warn('[WARN] Could not persist version update:', versionErr.message);
         }
 
         // Set response headers for zip download

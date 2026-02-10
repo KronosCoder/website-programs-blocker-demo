@@ -1,37 +1,31 @@
-const path = require('path');
-const { readData, writeData, getNextId } = require('../models/dataModel');
+const { addWebsite: addWebsiteDb, deleteWebsite: deleteWebsiteDb } = require('../models/dataModel');
 
 // Add website
-exports.addWebsite = (req, res) => {
+exports.addWebsite = async (req, res) => {
     try {
         const { url } = req.body;
         if (!url) {
             return res.status(400).json({ error: 'URL is required' });
         }
 
-        const data = readData();
-        const newWebsite = {
-            id: getNextId(data.websites),
-            url: url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '')
-        };
-        data.websites.push(newWebsite);
-        writeData(data);
+        const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
+        const newWebsite = await addWebsiteDb(cleanUrl);
 
         res.json(newWebsite);
     } catch (error) {
+        console.error('[ERROR] addWebsite:', error.message);
         res.status(500).json({ error: 'Failed to add website' });
     }
 };
 
 // Delete website
-exports.deleteWebsite = (req, res) => {
+exports.deleteWebsite = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const data = readData();
-        data.websites = data.websites.filter(w => w.id !== id);
-        writeData(data);
+        await deleteWebsiteDb(id);
         res.json({ success: true });
     } catch (error) {
+        console.error('[ERROR] deleteWebsite:', error.message);
         res.status(500).json({ error: 'Failed to delete website' });
     }
 };

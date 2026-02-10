@@ -1,38 +1,30 @@
-const { readData, writeData, getNextId } = require('../models/dataModel');
+const { addProgram: addProgramDb, deleteProgram: deleteProgramDb } = require('../models/dataModel');
 
 // Add program
-exports.addProgram = (req, res) => {
+exports.addProgram = async (req, res) => {
     try {
         const { name, path: programPath, processName } = req.body;
         if (!name || !processName) {
             return res.status(400).json({ error: 'Name and process name are required' });
         }
 
-        const data = readData();
-        const newProgram = {
-            id: getNextId(data.programs),
-            name,
-            path: programPath || '',
-            processName
-        };
-        data.programs.push(newProgram);
-        writeData(data);
+        const newProgram = await addProgramDb({ name, path: programPath, processName });
 
         res.json(newProgram);
     } catch (error) {
+        console.error('[ERROR] addProgram:', error.message);
         res.status(500).json({ error: 'Failed to add program' });
     }
 };
 
 // Delete program
-exports.deleteProgram = (req, res) => {
+exports.deleteProgram = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
-        const data = readData();
-        data.programs = data.programs.filter(p => p.id !== id);
-        writeData(data);
+        await deleteProgramDb(id);
         res.json({ success: true });
     } catch (error) {
+        console.error('[ERROR] deleteProgram:', error.message);
         res.status(500).json({ error: 'Failed to delete program' });
     }
 };
