@@ -1,6 +1,6 @@
 @echo off
 :: ===================================
-:: Game Unblocker Script v1.2.6
+:: Game Unblocker Script v1.2.7
 :: Remove blocks on gaming websites and programs
 :: Auto-elevates to Administrator!
 :: ===================================
@@ -15,12 +15,12 @@ if %errorLevel% neq 0 (
     exit /b
 )
 
-title Game Blocker - Unblock Mode v1.2.6
+title Game Blocker - Unblock Mode v1.2.7
 color 0A
 echo.
 echo ========================================
 echo       GAME BLOCKER - UNBLOCK MODE
-echo             Version: v1.2.6
+echo             Version: v1.2.7
 echo ========================================
 echo.
 
@@ -116,6 +116,26 @@ echo [OK] Gaming websites unblocked!
 echo.
 
 :: ===================================
+:: RESTORE BROWSER SETTINGS (Enable DoH)
+:: ===================================
+echo [STEP 1.5] Restoring Browser Policies...
+
+:: Remove Firefox Policy
+reg delete "HKLM\SOFTWARE\Policies\Mozilla\Firefox" /v DNSOverHTTPS /f >nul 2>&1
+
+:: Remove Brave Policy
+reg delete "HKLM\SOFTWARE\Policies\BraveSoftware\Brave" /v DnsOverHttpsMode /f >nul 2>&1
+
+:: Remove Chrome Policy
+reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v DnsOverHttpsMode /f >nul 2>&1
+
+:: Remove Edge Policy
+reg delete "HKLM\SOFTWARE\Policies\Microsoft\Edge" /v DnsOverHttpsMode /f >nul 2>&1
+
+echo [OK] Browser restrictions removed!
+echo.
+
+:: ===================================
 :: UNBLOCK GAMING PROGRAMS (Remove Firewall Rules)
 :: ===================================
 echo [STEP 2] Removing firewall rules...
@@ -140,7 +160,7 @@ echo.
 
 echo ========================================
 echo     GAME UNBLOCKING COMPLETED!
-echo             Version: v1.2.6
+echo             Version: v1.2.7
 echo ========================================
 echo.
 echo All gaming websites and programs are now unblocked.

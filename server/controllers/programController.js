@@ -1,20 +1,19 @@
-const path = require('path');
 const { readData, writeData, getNextId } = require('../models/dataModel');
 
 // Add program
 exports.addProgram = (req, res) => {
     try {
         const { name, path: programPath, processName } = req.body;
-        if (!name || !programPath) {
-            return res.status(400).json({ error: 'Name and path are required' });
+        if (!name || !processName) {
+            return res.status(400).json({ error: 'Name and process name are required' });
         }
 
         const data = readData();
         const newProgram = {
             id: getNextId(data.programs),
             name,
-            path: programPath,
-            processName: processName || path.basename(programPath)
+            path: programPath || '',
+            processName
         };
         data.programs.push(newProgram);
         writeData(data);
