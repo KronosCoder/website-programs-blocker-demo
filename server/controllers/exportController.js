@@ -1,12 +1,8 @@
-const fs = require('fs');
-const path = require('path');
 const archiver = require('archiver');
 const { readData, writeData } = require('../models/dataModel');
 const { generateBlockBat, generateUnblockBat } = require('../utils/batGenerator');
 
-const EXPORTS_DIR = path.join(__dirname, '..', 'exports');
-
-// Export BAT files and download as zip directly
+// Export BAT files and download as zip directly (fully in-memory, no disk writes)
 exports.exportAndDownload = (req, res) => {
     try {
         const data = readData();
@@ -20,21 +16,21 @@ exports.exportAndDownload = (req, res) => {
         const blockFileName = `block_games_${version}.bat`;
         const unblockFileName = `unblock_games_${version}.bat`;
 
-        // Save files to disk (optional, keeps a copy on server)
-        fs.writeFileSync(path.join(EXPORTS_DIR, blockFileName), blockBat);
-        fs.writeFileSync(path.join(EXPORTS_DIR, unblockFileName), unblockBat);
-
-        // Update version
-        data.version.patch++;
-        if (data.version.patch >= 10) {
-            data.version.patch = 0;
-            data.version.minor++;
-            if (data.version.minor >= 10) {
-                data.version.minor = 0;
-                data.version.major++;
+        // Update version (wrapped in try-catch for read-only filesystems like Vercel)
+        try {
+            data.version.patch++;
+            if (data.version.patch >= 10) {
+                data.version.patch = 0;
+                data.version.minor++;
+                if (data.version.minor >= 10) {
+                    data.version.minor = 0;
+                    data.version.major++;
+                }
             }
+            writeData(data);
+        } catch (versionErr) {
+            console.warn('[WARN] Could not persist version update (read-only FS?):', versionErr.message);
         }
-        writeData(data);
 
         // Set response headers for zip download
         const zipFileName = `game_blocker_${version}.zip`;
@@ -45,19 +41,23 @@ exports.exportAndDownload = (req, res) => {
         const archive = archiver('zip', { zlib: { level: 9 } });
 
         archive.on('error', (err) => {
-            console.error(err);
-            res.status(500).json({ error: 'Failed to create zip file' });
+            console.error('[ERROR] Archive error:', err);
+            if (!res.headersSent) {
+                res.status(500).json({ error: 'Failed to create zip file' });
+            }
         });
 
         archive.pipe(res);
 
-        // Add BAT files to archive
-        archive.file(path.join(EXPORTS_DIR, blockFileName), { name: blockFileName });
-        archive.file(path.join(EXPORTS_DIR, unblockFileName), { name: unblockFileName });
+        // Add BAT content directly to archive (in-memory, no disk I/O)
+        archive.append(Buffer.from(blockBat, 'utf8'), { name: blockFileName });
+        archive.append(Buffer.from(unblockBat, 'utf8'), { name: unblockFileName });
 
         archive.finalize();
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Failed to export BAT files' });
+        console.error('[ERROR] Export failed:', error);
+        if (!res.headersSent) {
+            res.status(500).json({ error: 'Failed to export BAT files' });
+        }
     }
 };
