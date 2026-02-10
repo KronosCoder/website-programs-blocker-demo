@@ -1,5 +1,7 @@
 // API Base URL
-export const API_BASE = import.meta.env.VITE_API_BASE || 'http://localhost:3001/api'
+export const API_BASE = import.meta.env.VITE_API_BASE
+
+console.log(API_BASE)
 
 // Fetch blocklist data
 export const fetchBlocklist = async () => {
