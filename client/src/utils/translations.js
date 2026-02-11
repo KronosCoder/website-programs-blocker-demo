@@ -107,6 +107,13 @@ export const translations = {
         websiteAlreadyExists: 'This website already exists!',
         programNameExists: 'A program with this name already exists!',
         programProcessExists: 'A program with this process name already exists!',
+
+        // Passphrase Page
+        enterPassphrase: 'Enter Passphrase',
+        passphraseDescription: 'Please enter the passphrase to access the application.',
+        passphrasePlaceholder: 'Passphrase',
+        unlock: 'Unlock',
+        incorrectPassphrase: 'Incorrect passphrase',
     },
     th: {
         // Header
@@ -216,6 +223,13 @@ export const translations = {
         websiteAlreadyExists: 'เว็บไซต์นี้มีอยู่แล้ว!',
         programNameExists: 'มีโปรแกรมชื่อนี้อยู่แล้ว!',
         programProcessExists: 'มี Process ชื่อนี้อยู่แล้ว!',
+
+        // Passphrase Page
+        enterPassphrase: 'ป้อนรหัสผ่าน',
+        passphraseDescription: 'กรุณาป้อนรหัสผ่านเพื่อเข้าใช้งานแอปพลิเคชัน',
+        passphrasePlaceholder: 'รหัสผ่าน',
+        unlock: 'ปลดล็อก',
+        incorrectPassphrase: 'รหัสผ่านไม่ถูกต้อง',
     }
 }
 

@@ -5,11 +5,16 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import App from './App.jsx'
 import Fallback from './fallback/fallback.jsx'
 import './index.css'
+import { PassphrasePage } from './components/auth/PassphrasePage'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+  },
+  {
+    path: '/auth',
+    element: <PassphrasePage />,
   },
   {
     path: '*',

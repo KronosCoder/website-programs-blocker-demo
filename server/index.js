@@ -8,6 +8,7 @@ const websiteRoutes = require('./routes/websiteRoutes');
 const programRoutes = require('./routes/programRoutes');
 const exportRoutes = require('./routes/exportRoutes');
 const redirectRoutes = require('./routes/redirectRoutes');
+const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 const PORT = 3001;
@@ -22,6 +23,7 @@ app.use('/api/websites', websiteRoutes);
 app.use('/api/programs', programRoutes);
 app.use('/api/redirect-url', redirectRoutes);
 app.use('/api', exportRoutes);
+app.use('/api', authRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

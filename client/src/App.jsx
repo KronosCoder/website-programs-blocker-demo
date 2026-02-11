@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useBlocklist } from './hooks/useBlocklist'
 import { useLanguage } from './context/LanguageContext'
 import { LoadingSpinner } from './components/common/LoadingSpinner'
@@ -21,6 +22,21 @@ function App() {
     exportBat,
     saveRedirectUrl
   } = useBlocklist(t)
+
+  const [showExport, setShowExport] = useState(false)
+
+  useEffect(() => {
+    // Expose function to global window object
+    window.revealRedirectUrl = () => {
+      setShowExport(true)
+      console.log('Export section revealed!')
+    }
+
+    // Cleanup
+    return () => {
+      delete window.revealRedirectUrl
+    }
+  }, [])
 
   if (loading) {
     return <LoadingSpinner />
@@ -58,6 +74,7 @@ function App() {
           {/* Export Section */}
           <ExportSection
             onExport={exportBat}
+            isRevealRedirectUrl={showExport}
             redirectUrl={redirectUrl}
             onSaveRedirectUrl={saveRedirectUrl}
           />
