@@ -105,15 +105,49 @@ async function incrementVersion() {
     return version;
 }
 
+// ==================== APP CONFIG (Redirect URL) ====================
+
+async function getRedirectUrl() {
+    const { data, error } = await supabase
+        .from('app_config')
+        .select('value')
+        .eq('key', 'redirect_url')
+        .single();
+    if (error || !data) return '';
+    return data.value || '';
+}
+
+async function setRedirectUrl(url) {
+    // Check if row exists first
+    const { data: existing } = await supabase
+        .from('app_config')
+        .select('key')
+        .eq('key', 'redirect_url');
+
+    if (existing && existing.length > 0) {
+        const { error } = await supabase
+            .from('app_config')
+            .update({ value: url })
+            .eq('key', 'redirect_url');
+        if (error) throw error;
+    } else {
+        const { error } = await supabase
+            .from('app_config')
+            .insert({ key: 'redirect_url', value: url });
+        if (error) throw error;
+    }
+}
+
 // ==================== COMBINED (for blocklist endpoint) ====================
 
 async function getBlocklist() {
-    const [websites, programs, version] = await Promise.all([
+    const [websites, programs, version, redirectUrl] = await Promise.all([
         getWebsites(),
         getPrograms(),
-        getVersion()
+        getVersion(),
+        getRedirectUrl()
     ]);
-    return { websites, programs, version };
+    return { websites, programs, version, redirectUrl };
 }
 
 module.exports = {
@@ -125,5 +159,7 @@ module.exports = {
     deleteProgram,
     getVersion,
     incrementVersion,
+    getRedirectUrl,
+    setRedirectUrl,
     getBlocklist
 };

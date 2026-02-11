@@ -1,7 +1,6 @@
 // API Base URL
 export const API_BASE = import.meta.env.VITE_API_BASE
 
-console.log(API_BASE)
 
 // Fetch blocklist data
 export const fetchBlocklist = async () => {
@@ -37,4 +36,20 @@ export const addProgramApi = async (program) => {
 // Delete program
 export const deleteProgramApi = async (id) => {
     await fetch(`${API_BASE}/programs/${id}`, { method: 'DELETE' })
+}
+
+// Get redirect URL
+export const getRedirectUrlApi = async () => {
+    const res = await fetch(`${API_BASE}/redirect-url`)
+    return res.json()
+}
+
+// Set redirect URL
+export const setRedirectUrlApi = async (url) => {
+    const res = await fetch(`${API_BASE}/redirect-url`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+    })
+    return res.json()
 }

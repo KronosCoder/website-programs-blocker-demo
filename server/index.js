@@ -7,6 +7,7 @@ const blocklistRoutes = require('./routes/blocklistRoutes');
 const websiteRoutes = require('./routes/websiteRoutes');
 const programRoutes = require('./routes/programRoutes');
 const exportRoutes = require('./routes/exportRoutes');
+const redirectRoutes = require('./routes/redirectRoutes');
 
 const app = express();
 const PORT = 3001;
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use('/api/blocklist', blocklistRoutes);
 app.use('/api/websites', websiteRoutes);
 app.use('/api/programs', programRoutes);
+app.use('/api/redirect-url', redirectRoutes);
 app.use('/api', exportRoutes);
 
 // Global Error Handler

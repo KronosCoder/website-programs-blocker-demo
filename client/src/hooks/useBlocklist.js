@@ -5,12 +5,14 @@ import {
     deleteWebsiteApi,
     addProgramApi,
     deleteProgramApi,
+    setRedirectUrlApi,
     API_BASE
 } from '../utils/api'
 import { Toast, showLoading, closeLoading, confirmDialog, showQuestion } from '../utils/toast'
 
 export function useBlocklist(t) {
     const [blocklist, setBlocklist] = useState({ websites: [], programs: [] })
+    const [redirectUrl, setRedirectUrl] = useState('')
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -21,6 +23,9 @@ export function useBlocklist(t) {
         try {
             const blockData = await fetchBlocklist()
             setBlocklist(blockData)
+            if (blockData.redirectUrl !== undefined) {
+                setRedirectUrl(blockData.redirectUrl)
+            }
         } catch (error) {
             Toast.fire({ icon: 'error', title: t('failedToFetchData') })
         } finally {
@@ -178,13 +183,28 @@ export function useBlocklist(t) {
         }
     }
 
+    // Save redirect URL
+    const saveRedirectUrl = async (url) => {
+        try {
+            await setRedirectUrlApi(url)
+            setRedirectUrl(url)
+            Toast.fire({ icon: 'success', title: t('redirectUrlSaved') })
+            return true
+        } catch (error) {
+            Toast.fire({ icon: 'error', title: t('failedToSaveRedirectUrl') })
+            return false
+        }
+    }
+
     return {
         blocklist,
         loading,
+        redirectUrl,
         addWebsite,
         deleteWebsite,
         addProgram,
         deleteProgram,
-        exportBat
+        exportBat,
+        saveRedirectUrl
     }
 }

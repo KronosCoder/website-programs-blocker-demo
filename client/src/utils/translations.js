@@ -38,6 +38,15 @@ export const translations = {
         exportDescription: 'Generate block_games.bat and unblock_games.bat with current settings',
         exportButton: 'Export BAT Files',
 
+        // Redirect URL
+        redirectUrlLabel: 'Redirect URL (when blocked)',
+        redirectUrlDescription: 'When a blocked program or website is accessed, this URL will open in the browser instead',
+        redirectUrlPlaceholder: 'https://example.com',
+        redirectUrlSaved: 'Redirect URL saved!',
+        failedToSaveRedirectUrl: 'Failed to save redirect URL',
+        save: 'Save',
+        saved: 'Saved!',
+
         // Export History
         exportHistory: 'Export History',
         exports: 'exports',
@@ -137,6 +146,15 @@ export const translations = {
         exportTitle: 'ส่งออกไฟล์ BAT',
         exportDescription: 'สร้างไฟล์ block_games.bat และ unblock_games.bat ด้วยการตั้งค่าปัจจุบัน',
         exportButton: 'ส่งออกไฟล์ BAT',
+
+        // Redirect URL
+        redirectUrlLabel: 'URL เปลี่ยนเส้นทาง (เมื่อถูกบล็อก)',
+        redirectUrlDescription: 'เมื่อมีการเปิดโปรแกรมหรือเว็บไซต์ที่ถูกบล็อก URL นี้จะเปิดขึ้นในเบราว์เซอร์แทน',
+        redirectUrlPlaceholder: 'https://example.com',
+        redirectUrlSaved: 'บันทึก URL เปลี่ยนเส้นทางแล้ว!',
+        failedToSaveRedirectUrl: 'ไม่สามารถบันทึก URL ได้',
+        save: 'บันทึก',
+        saved: 'บันทึกแล้ว!',
 
         // Export History
         exportHistory: 'ประวัติการส่งออก',

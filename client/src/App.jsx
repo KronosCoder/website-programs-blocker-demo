@@ -13,11 +13,13 @@ function App() {
   const {
     blocklist,
     loading,
+    redirectUrl,
     addWebsite,
     deleteWebsite,
     addProgram,
     deleteProgram,
-    exportBat
+    exportBat,
+    saveRedirectUrl
   } = useBlocklist(t)
 
   if (loading) {
@@ -54,7 +56,11 @@ function App() {
           </div>
 
           {/* Export Section */}
-          <ExportSection onExport={exportBat} />
+          <ExportSection
+            onExport={exportBat}
+            redirectUrl={redirectUrl}
+            onSaveRedirectUrl={saveRedirectUrl}
+          />
 
           {/* Footer */}
           <Footer />
