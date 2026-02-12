@@ -30,6 +30,10 @@ const router = createBrowserRouter([
     element: <AuthGuard><RoomSelectionPage /></AuthGuard>,
   },
   {
+    path: '/',
+    element: <AuthGuard><App /></AuthGuard>,
+  },
+  {
     path: '/:roomId',
     element: <AuthGuard><App /></AuthGuard>,
   },
@@ -39,7 +43,7 @@ const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Fallback />,
+    element: <GuestGuard><Fallback /></GuestGuard>,
   },
 ])
 
