@@ -3,12 +3,15 @@ const { addProgram: addProgramDb, deleteProgram: deleteProgramDb } = require('..
 // Add program
 exports.addProgram = async (req, res) => {
     try {
-        const { name, path: programPath, processName } = req.body;
+        const { name, path: programPath, processName, roomId } = req.body;
         if (!name || !processName) {
             return res.status(400).json({ error: 'Name and process name are required' });
         }
+        if (!roomId) {
+            return res.status(400).json({ error: 'roomId is required' });
+        }
 
-        const newProgram = await addProgramDb({ name, path: programPath, processName });
+        const newProgram = await addProgramDb({ name, path: programPath, processName }, roomId);
 
         res.json(newProgram);
     } catch (error) {

@@ -5,7 +5,11 @@ const { generateBlockBat, generateUnblockBat } = require('../utils/batGenerator'
 // Export BAT files and download as zip directly (fully in-memory, no disk writes)
 exports.exportAndDownload = async (req, res) => {
     try {
-        const data = await getBlocklist();
+        const roomId = req.query.roomId;
+        if (!roomId) {
+            return res.status(400).json({ error: 'roomId is required' });
+        }
+        const data = await getBlocklist(roomId);
         const versionObj = data.version;
         const version = `v${versionObj.major}.${versionObj.minor}.${versionObj.patch}`;
 
@@ -14,8 +18,8 @@ exports.exportAndDownload = async (req, res) => {
         const unblockBat = generateUnblockBat(data, version);
 
         // File names
-        const blockFileName = `block_games_${version}.bat`;
-        const unblockFileName = `unblock_games_${version}.bat`;
+        const blockFileName = `block_${roomId}_${version}.bat`;
+        const unblockFileName = `unblock_${roomId}_${version}.bat`;
 
         // Update version in database
         try {
@@ -25,7 +29,7 @@ exports.exportAndDownload = async (req, res) => {
         }
 
         // Set response headers for zip download
-        const zipFileName = `game_blocker_${version}.zip`;
+        const zipFileName = `e-blocker_${roomId}_${version}.zip`;
         res.setHeader('Content-Type', 'application/zip');
         res.setHeader('Content-Disposition', `attachment; filename="${zipFileName}"`);
 

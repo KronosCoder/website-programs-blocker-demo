@@ -1,16 +1,59 @@
+import { Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, LogOut, Github } from 'lucide-react'
 import { LanguageToggle } from '../common/LanguageToggle'
 import { useLanguage } from '../../context/LanguageContext'
+import { removeToken } from '../../utils/api'
+import { confirmDialog } from '../../utils/toast'
 
-// Manual app version (separate from BAT export version)
-const APP_VERSION = 'v1.0.0'
-
-export function Header() {
+export function Header({ roomId }) {
     const { t } = useLanguage()
+    const navigate = useNavigate()
+
+    const handleSignOut = async () => {
+        const isConfirmed = await confirmDialog({
+            title: t('signOutConfirmTitle'),
+            text: t('signOutConfirmText'),
+            confirmButtonText: t('yesSignOut'),
+            icon: 'warning'
+        })
+
+        if (isConfirmed) {
+            removeToken()
+            navigate('/auth')
+        }
+    }
+
+    const openGithub = () => {
+        window.open('https://github.com/KronosCoder', '_blank')
+    }
 
     return (
         <header className="text-center mb-8 animate-fade-in relative">
-            {/* Language Toggle Button */}
-            <div className="absolute top-0 right-0">
+            {/* Back Button */}
+            <Link
+                to="/rooms"
+                className="absolute top-0 left-0 p-3 rounded-xl glass-button text-slate-400 hover:text-blue-300 hover:bg-white/5 transition-all group"
+                title={t('backToRooms')}
+            >
+                <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+            </Link>
+
+            {/* Top Right Actions */}
+            <div className="absolute top-0 right-0 flex items-center gap-3">
+                <button
+                    onClick={openGithub}
+                    className="p-2 rounded-lg glass-button text-slate-400 hover:text-white hover:bg-white/10 transition-colors cursor-pointer"
+                    title={t('githubRepo')}
+                >
+                    <Github className="w-5 h-5" />
+                </button>
+                <button
+                    onClick={handleSignOut}
+                    className="p-2 rounded-lg glass-button text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
+                    title={t('signOut')}
+                >
+                    <LogOut className="w-5 h-5" />
+                </button>
                 <LanguageToggle />
             </div>
 
@@ -23,7 +66,7 @@ export function Header() {
                 {t('appSubtitle')}
             </p>
             <div className="mt-3 inline-block px-4 py-1.5 rounded-full glass-button text-sm font-semibold text-blue-300 border border-blue-500/30">
-                {t('currentVersion')}: {APP_VERSION}
+                {t('currentConfigRoom')} : {roomId}
             </div>
         </header>
     )

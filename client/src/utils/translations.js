@@ -10,6 +10,11 @@ export const translations = {
         sites: 'sites',
         enterUrl: 'Enter URL (e.g., games.com)',
         add: 'Add',
+        signOut: 'Sign Out',
+        signOutConfirmTitle: 'Sign Out?',
+        signOutConfirmText: 'Are you sure you want to sign out?',
+        yesSignOut: 'Yes, Sign Out',
+        githubRepo: 'GitHub Repo',
 
         // Programs Section
         programsToBlock: 'Programs to Block',
@@ -114,6 +119,18 @@ export const translations = {
         passphrasePlaceholder: 'Passphrase',
         unlock: 'Unlock',
         incorrectPassphrase: 'Incorrect passphrase',
+        passphraseRequired: 'Passphrase is required',
+        passphraseVerified: 'Passphrase verified!',
+
+        // Room Selection Page
+        selectRoom: 'Select Room',
+        roomSelectionDescription: 'Choose a room to configure its blocking settings',
+        building: 'Building',
+        floor: 'Floor',
+        room: 'Room',
+        rooms: 'rooms',
+        currentConfigRoom: 'Current Config Room',
+        backToRooms: 'Back to Rooms',
     },
     th: {
         // Header
@@ -126,6 +143,11 @@ export const translations = {
         sites: 'เว็บไซต์',
         enterUrl: 'ป้อน URL (เช่น games.com)',
         add: 'เพิ่ม',
+        signOut: 'ออกจากระบบ',
+        signOutConfirmTitle: 'ออกจากระบบ?',
+        signOutConfirmText: 'คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?',
+        yesSignOut: 'ใช่ ออกจากระบบ',
+        githubRepo: 'ซอร์สโค้ด',
 
         // Programs Section
         programsToBlock: 'โปรแกรมที่จะบล็อก',
@@ -230,6 +252,18 @@ export const translations = {
         passphrasePlaceholder: 'รหัสผ่าน',
         unlock: 'ปลดล็อก',
         incorrectPassphrase: 'รหัสผ่านไม่ถูกต้อง',
+        passphraseRequired: 'กรุณาป้อนรหัสผ่าน',
+        passphraseVerified: 'ยืนยันรหัสผ่านสำเร็จ!',
+
+        // Room Selection Page
+        selectRoom: 'เลือกห้อง',
+        roomSelectionDescription: 'เลือกห้องเพื่อกำหนดค่าการบล็อก',
+        building: 'อาคาร',
+        floor: 'ชั้น',
+        room: 'ห้อง',
+        rooms: 'ห้อง',
+        currentConfigRoom: 'ห้องที่กำลังตั้งค่า',
+        backToRooms: 'กลับไปหน้าเลือกห้อง',
     }
 }
 

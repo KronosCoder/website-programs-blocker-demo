@@ -2,19 +2,20 @@ const supabase = require('./supabase');
 
 // ==================== WEBSITES ====================
 
-async function getWebsites() {
+async function getWebsites(roomId) {
     const { data, error } = await supabase
         .from('websites')
         .select('*')
+        .eq('room_id', roomId)
         .order('id');
     if (error) throw error;
     return data;
 }
 
-async function addWebsite(url) {
+async function addWebsite(url, roomId) {
     const { data, error } = await supabase
         .from('websites')
-        .insert({ url })
+        .insert({ url, room_id: roomId })
         .select()
         .single();
     if (error) throw error;
@@ -31,13 +32,13 @@ async function deleteWebsite(id) {
 
 // ==================== PROGRAMS ====================
 
-async function getPrograms() {
+async function getPrograms(roomId) {
     const { data, error } = await supabase
         .from('programs')
         .select('*')
+        .eq('room_id', roomId)
         .order('id');
     if (error) throw error;
-    // Map snake_case DB columns to camelCase for compatibility
     return data.map(p => ({
         id: p.id,
         name: p.name,
@@ -46,13 +47,14 @@ async function getPrograms() {
     }));
 }
 
-async function addProgram({ name, path: programPath, processName }) {
+async function addProgram({ name, path: programPath, processName }, roomId) {
     const { data, error } = await supabase
         .from('programs')
         .insert({
             name,
             path: programPath || '',
-            process_name: processName
+            process_name: processName,
+            room_id: roomId
         })
         .select()
         .single();
@@ -140,10 +142,10 @@ async function setRedirectUrl(url) {
 
 // ==================== COMBINED (for blocklist endpoint) ====================
 
-async function getBlocklist() {
+async function getBlocklist(roomId) {
     const [websites, programs, version, redirectUrl] = await Promise.all([
-        getWebsites(),
-        getPrograms(),
+        getWebsites(roomId),
+        getPrograms(roomId),
         getVersion(),
         getRedirectUrl()
     ]);

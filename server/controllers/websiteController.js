@@ -3,13 +3,16 @@ const { addWebsite: addWebsiteDb, deleteWebsite: deleteWebsiteDb } = require('..
 // Add website
 exports.addWebsite = async (req, res) => {
     try {
-        const { url } = req.body;
+        const { url, roomId } = req.body;
         if (!url) {
             return res.status(400).json({ error: 'URL is required' });
         }
+        if (!roomId) {
+            return res.status(400).json({ error: 'roomId is required' });
+        }
 
         const cleanUrl = url.replace(/^(https?:\/\/)?(www\.)?/, '').replace(/\/$/, '');
-        const newWebsite = await addWebsiteDb(cleanUrl);
+        const newWebsite = await addWebsiteDb(cleanUrl, roomId);
 
         res.json(newWebsite);
     } catch (error) {

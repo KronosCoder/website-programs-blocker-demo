@@ -10,18 +10,18 @@ import {
 } from '../utils/api'
 import { Toast, showLoading, closeLoading, confirmDialog, showQuestion } from '../utils/toast'
 
-export function useBlocklist(t) {
+export function useBlocklist(t, roomId) {
     const [blocklist, setBlocklist] = useState({ websites: [], programs: [] })
     const [redirectUrl, setRedirectUrl] = useState('')
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        fetchData()
-    }, [])
+        if (roomId) fetchData()
+    }, [roomId])
 
     const fetchData = async () => {
         try {
-            const blockData = await fetchBlocklist()
+            const blockData = await fetchBlocklist(roomId)
             setBlocklist(blockData)
             if (blockData.redirectUrl !== undefined) {
                 setRedirectUrl(blockData.redirectUrl)
@@ -57,7 +57,7 @@ export function useBlocklist(t) {
 
         try {
             showLoading(t('addingWebsite'))
-            const website = await addWebsiteApi(url)
+            const website = await addWebsiteApi(url, roomId)
             setBlocklist(prev => ({ ...prev, websites: [...prev.websites, website] }))
             closeLoading()
             Toast.fire({ icon: 'success', title: t('websiteAddedSuccess') })
@@ -118,7 +118,7 @@ export function useBlocklist(t) {
 
         try {
             showLoading(t('addingProgram'))
-            const newProgram = await addProgramApi(program)
+            const newProgram = await addProgramApi(program, roomId)
             setBlocklist(prev => ({ ...prev, programs: [...prev.programs, newProgram] }))
             closeLoading()
             Toast.fire({ icon: 'success', title: t('programAddedSuccess') })
@@ -169,10 +169,22 @@ export function useBlocklist(t) {
             try {
                 showLoading(t('exporting'), `<p style="color: #94a3b8;">${t('generatingBat')}</p>`)
 
-                // Direct download via browser
+                // Download via fetch with auth token (direct link can't include Bearer header)
+                const res = await fetch(`${API_BASE}/export-download?roomId=${roomId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('auth_token')}`
+                    }
+                })
+
+                if (!res.ok) throw new Error('Export failed')
+
+                const blob = await res.blob()
+                const url = URL.createObjectURL(blob)
                 const link = document.createElement('a')
-                link.href = `${API_BASE}/export-download`
+                link.href = url
+                link.download = 'blocker-scripts.zip'
                 link.click()
+                URL.revokeObjectURL(url)
 
                 closeLoading()
                 Toast.fire({ icon: 'success', title: t('exportSuccess') })

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { useBlocklist } from './hooks/useBlocklist'
 import { useLanguage } from './context/LanguageContext'
 import { LoadingSpinner } from './components/common/LoadingSpinner'
@@ -7,10 +8,17 @@ import { Footer } from './components/layout/Footer'
 import { WebsitesSection } from './components/websites/WebsitesSection'
 import { ProgramsSection } from './components/programs/ProgramsSection'
 import { ExportSection } from './components/export/ExportSection'
+import Fallback from './fallback/fallback'
 import './index.css'
 
 function App() {
   const { t } = useLanguage()
+  const { roomId } = useParams()
+
+  if (!roomId || !roomId.startsWith('9') || roomId.length !== 3) {
+    return <Fallback />
+  }
+
   const {
     blocklist,
     loading,
@@ -21,18 +29,16 @@ function App() {
     deleteProgram,
     exportBat,
     saveRedirectUrl
-  } = useBlocklist(t)
+  } = useBlocklist(t, roomId)
 
   const [showExport, setShowExport] = useState(false)
 
   useEffect(() => {
-    // Expose function to global window object
     window.revealRedirectUrl = () => {
       setShowExport(true)
       console.log('Export section revealed!')
     }
 
-    // Cleanup
     return () => {
       delete window.revealRedirectUrl
     }
@@ -55,7 +61,7 @@ function App() {
       <div className="min-h-screen p-4 md:p-8 flex justify-center items-center relative">
         <div className="max-w-5xl w-full mx-auto flex flex-col gap-4">
           {/* Header */}
-          <Header />
+          <Header roomId={roomId} />
 
           {/* Main Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

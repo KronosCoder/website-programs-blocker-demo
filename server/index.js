@@ -10,6 +10,9 @@ const exportRoutes = require('./routes/exportRoutes');
 const redirectRoutes = require('./routes/redirectRoutes');
 const authRoutes = require('./routes/authRoutes');
 
+// Import middleware
+const authMiddleware = require('./middleware/auth');
+
 const app = express();
 const PORT = 3001;
 
@@ -17,13 +20,15 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 
-// ===== API ROUTES =====
-app.use('/api/blocklist', blocklistRoutes);
-app.use('/api/websites', websiteRoutes);
-app.use('/api/programs', programRoutes);
-app.use('/api/redirect-url', redirectRoutes);
-app.use('/api', exportRoutes);
+// ===== PUBLIC ROUTES (no auth required) =====
 app.use('/api', authRoutes);
+
+// ===== PROTECTED ROUTES (auth required) =====
+app.use('/api/blocklist', authMiddleware, blocklistRoutes);
+app.use('/api/websites', authMiddleware, websiteRoutes);
+app.use('/api/programs', authMiddleware, programRoutes);
+app.use('/api/redirect-url', authMiddleware, redirectRoutes);
+app.use('/api', authMiddleware, exportRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
