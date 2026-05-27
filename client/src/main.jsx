@@ -22,11 +22,7 @@ const router = createBrowserRouter([
   {
     path: '/:roomId',
     element: <App />,
-  },
-  {
-    path: '*',
-    element: <Fallback />,
-  },
+  }
 ])
 
 createRoot(document.getElementById('root')).render(
