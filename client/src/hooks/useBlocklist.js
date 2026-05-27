@@ -22,12 +22,17 @@ export function useBlocklist(t, roomId) {
     const fetchData = async () => {
         try {
             const blockData = await fetchBlocklist(roomId)
+            if (!blockData || blockData.error || !Array.isArray(blockData.websites) || !Array.isArray(blockData.programs)) {
+                throw new Error(blockData?.error || 'Invalid blocklist data received')
+            }
             setBlocklist(blockData)
             if (blockData.redirectUrl !== undefined) {
                 setRedirectUrl(blockData.redirectUrl)
             }
         } catch (error) {
+            console.error('Error fetching blocklist:', error)
             Toast.fire({ icon: 'error', title: t('failedToFetchData') })
+            setBlocklist({ websites: [], programs: [] })
         } finally {
             setLoading(false)
         }

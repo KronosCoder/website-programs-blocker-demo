@@ -3,7 +3,7 @@ import { Globe, Plus } from 'lucide-react'
 import { WebsiteItem } from './WebsiteItem'
 import { useLanguage } from '../../context/LanguageContext'
 
-export function WebsitesSection({ websites, onAdd, onDelete }) {
+export function WebsitesSection({ websites = [], onAdd, onDelete }) {
     const [newUrl, setNewUrl] = useState('')
     const { t } = useLanguage()
 

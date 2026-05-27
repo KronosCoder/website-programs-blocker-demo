@@ -9,7 +9,7 @@ import './index.css'
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Navigate to="/rooms" replace />, 
+    element: <Navigate to="/rooms" replace />,
   },
   {
     path: '/rooms',

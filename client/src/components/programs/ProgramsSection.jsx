@@ -4,7 +4,7 @@ import { ProgramItem } from './ProgramItem'
 import { ProgramModal } from './ProgramModal'
 import { useLanguage } from '../../context/LanguageContext'
 
-export function ProgramsSection({ programs, onAdd, onDelete }) {
+export function ProgramsSection({ programs = [], onAdd, onDelete }) {
     const [showModal, setShowModal] = useState(false)
     const { t } = useLanguage()
 

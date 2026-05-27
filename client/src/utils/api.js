@@ -3,29 +3,16 @@ export const API_BASE = import.meta.env.VITE_API_BASE
 
 // ==================== TOKEN MANAGEMENT ====================
 
-export const getToken = () => localStorage.getItem('auth_token')
-export const setToken = (token) => localStorage.setItem('auth_token', token)
-export const removeToken = () => localStorage.removeItem('auth_token')
+export const getToken = () => null
+export const setToken = (token) => { }
+export const removeToken = () => { }
 
 function getAuthHeaders() {
-    const token = getToken()
-    return token ? { 'Authorization': `Bearer ${token}` } : {}
+    return {}
 }
 
 async function authFetch(url, options = {}) {
-    const headers = {
-        ...options.headers,
-        ...getAuthHeaders()
-    }
-
-    const res = await fetch(url, { ...options, headers })
-
-    if (res.status === 401) {
-        removeToken()
-        window.location.href = '/auth'
-        throw new Error('Unauthorized')
-    }
-
+    const res = await fetch(url, options)
     return res
 }
 

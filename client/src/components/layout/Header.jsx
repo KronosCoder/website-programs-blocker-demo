@@ -1,27 +1,10 @@
-import { Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, LogOut, Github } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { ArrowLeft, Github } from 'lucide-react'
 import { LanguageToggle } from '../common/LanguageToggle'
 import { useLanguage } from '../../context/LanguageContext'
-import { removeToken } from '../../utils/api'
-import { confirmDialog } from '../../utils/toast'
 
 export function Header({ roomId }) {
     const { t } = useLanguage()
-    const navigate = useNavigate()
-
-    const handleSignOut = async () => {
-        const isConfirmed = await confirmDialog({
-            title: t('signOutConfirmTitle'),
-            text: t('signOutConfirmText'),
-            confirmButtonText: t('yesSignOut'),
-            icon: 'warning'
-        })
-
-        if (isConfirmed) {
-            removeToken()
-            navigate('/auth')
-        }
-    }
 
     const openGithub = () => {
         window.open('https://github.com/KronosCoder', '_blank')
@@ -46,13 +29,6 @@ export function Header({ roomId }) {
                     title={t('githubRepo')}
                 >
                     <Github className="w-5 h-5" />
-                </button>
-                <button
-                    onClick={handleSignOut}
-                    className="p-2 rounded-lg glass-button text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
-                    title={t('signOut')}
-                >
-                    <LogOut className="w-5 h-5" />
                 </button>
                 <LanguageToggle />
             </div>

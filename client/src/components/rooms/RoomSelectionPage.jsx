@@ -1,10 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Building2, DoorOpen, ChevronDown, ChevronUp, LogOut, Github } from 'lucide-react'
+import { Building2, DoorOpen, ChevronDown, ChevronUp, Github } from 'lucide-react'
 import { useLanguage } from '../../context/LanguageContext'
 import { LanguageToggle } from '../common/LanguageToggle'
-import { removeToken } from '../../utils/api'
-import { confirmDialog } from '../../utils/toast'
 
 const BUILDING_NUMBER = 9
 const FLOORS = [2, 3, 4]
@@ -55,20 +53,6 @@ export function RoomSelectionPage() {
         setExpandedFloor(prev => prev === floor ? null : floor)
     }
 
-    const handleSignOut = async () => {
-        const isConfirmed = await confirmDialog({
-            title: t('signOutConfirmTitle'),
-            text: t('signOutConfirmText'),
-            confirmButtonText: t('yesSignOut'),
-            icon: 'warning'
-        })
-
-        if (isConfirmed) {
-            removeToken()
-            navigate('/auth')
-        }
-    }
-
     return (
         <>
             {/* Background Animations */}
@@ -90,13 +74,6 @@ export function RoomSelectionPage() {
                         title={t('githubRepo')}
                     >
                         <Github className="w-5 h-5" />
-                    </button>
-                    <button
-                        onClick={handleSignOut}
-                        className="p-2 rounded-lg glass-button text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer"
-                        title={t('signOut')}
-                    >
-                        <LogOut className="w-5 h-5" />
                     </button>
                     <LanguageToggle />
                 </div>
