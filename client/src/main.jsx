@@ -10,40 +10,22 @@ import { RoomSelectionPage } from './components/rooms/RoomSelectionPage'
 import { getToken } from './utils/api'
 import { useNavigate } from 'react-router-dom'
 
-function AuthGuard({ children }) {
-  const token = getToken()
-  if (!token) return <Navigate to="/auth" replace />
-  return children
-}
-
-function GuestGuard({ children }) {
-  const token = getToken()
-  if (token) {
-    return <Navigate to="/rooms" replace />
-  }
-  return children
-}
-
 const router = createBrowserRouter([
   {
     path: '/rooms',
-    element: <AuthGuard><RoomSelectionPage /></AuthGuard>,
+    element: <RoomSelectionPage />,
   },
   {
     path: '/',
-    element: <AuthGuard><App /></AuthGuard>,
+    element: <App />,
   },
   {
     path: '/:roomId',
-    element: <AuthGuard><App /></AuthGuard>,
-  },
-  {
-    path: '/auth',
-    element: <GuestGuard><PassphrasePage /></GuestGuard>,
+    element: <App />,
   },
   {
     path: '*',
-    element: <GuestGuard><Fallback /></GuestGuard>,
+    element: <Fallback />,
   },
 ])
 
