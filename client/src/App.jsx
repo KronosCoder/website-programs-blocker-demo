@@ -14,11 +14,6 @@ import './index.css'
 function App() {
   const { t } = useLanguage()
   const { roomId } = useParams()
-
-  if (!roomId || !roomId.startsWith('9') || roomId.length !== 3) {
-    return <Fallback />
-  }
-
   const {
     blocklist,
     loading,
