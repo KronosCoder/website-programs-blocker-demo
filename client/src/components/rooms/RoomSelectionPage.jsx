@@ -11,13 +11,26 @@ const FLOORS = [2, 3, 4]
 
 function generateRoomsForFloor(floor) {
     const rooms = []
+    
+    if (floor === 2) {
+        for (let room = 4; room <= 6; room++) {
+            rooms.push({
+                id: `${BUILDING_NUMBER}${floor}${room}`,
+                label: `${BUILDING_NUMBER}${floor}${room}`,
+                floor,
+                roomNumber: room,
+            })
+        }
+        return rooms
+    }
+
     rooms.push({
         id: `${BUILDING_NUMBER}${floor}A`,
         label: `${BUILDING_NUMBER}${floor}A`,
         floor,
         roomNumber: 'A',
     })
-    // Rooms 1-9
+    
     for (let room = 1; room <= 9; room++) {
         rooms.push({
             id: `${BUILDING_NUMBER}${floor}${room}`,
